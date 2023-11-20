@@ -3,14 +3,14 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="/attributecode.csv">
+        <entry key="/attributes.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
             </Attribute>
           </value>
         </entry>
-        <entry key="/attributes.csv">
+        <entry key="/files/WAS_VF3_Magento (1).csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -32,6 +32,27 @@
           </value>
         </entry>
         <entry key="/files/tefcold.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/files/was-pack.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/files/was-packOf.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/files/was_packof.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

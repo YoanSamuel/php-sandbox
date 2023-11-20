@@ -3,7 +3,7 @@ ini_set('memory_limit', '256M');
 function readCSV($filename) {
     $rows = [];
     if (($handle = fopen($filename, "r")) !== FALSE) {
-        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+        while (($data = fgetcsv($handle, 5000, ",")) !== FALSE) {
             $rows[] = $data;
         }
         fclose($handle);
@@ -34,41 +34,35 @@ function mergeCSVData($file1, $file2, $outputFile) {
         die('Les fichiers ne semblent pas avoir de colonne "supplier reference".');
     }
 
-    $desiredColumns = ['name', 'sku', 'supplier reference', 'pack of'];
-
     // Créer l'en-tête du fichier de sortie
-    $mergedHeader = [];
-    foreach ($desiredColumns as $column) {
-        $mergedHeader[] = $column;
-    }
+    $mergedHeader = ['name', 'sku', 'supplier reference', 'pack of'];
 
     $mergedData = [$mergedHeader];
 
-    foreach ($data1 as $row1) {
-        $supplierReference = $row1[$supplierReferenceIndex1];
+    foreach ($data2 as $row2) {
+        $supplierReference = $row2[$supplierReferenceIndex2];
 
-        $matchingRows = array_filter($data2, function ($row2) use ($supplierReference, $supplierReferenceIndex2) {
-            return $row2[$supplierReferenceIndex2] === $supplierReference;
+        // Chercher la référence du fournisseur dans le premier fichier
+        $matchingRow1 = array_filter($data1, function ($row1) use ($supplierReference, $supplierReferenceIndex1) {
+            return $row1[$supplierReferenceIndex1] === $supplierReference;
         });
-
-        foreach ($matchingRows as $matchingRow) {
-            // Créer la ligne fusionnée avec les colonnes désirées
-            $mergedRow = [];
-            foreach ($desiredColumns as $column) {
-                if ($column == 'supplier reference') {
-                    $mergedRow[] = $supplierReference; // Utiliser la valeur de "supplier reference" de $row1
-                } else {
-                    $mergedRow[] = $matchingRow[array_search($column, $header2)];
-                }
-            }
-            $mergedData[] = $mergedRow;
-        }
+        
+        $row1 = reset($matchingRow1) ?: array_fill(0, count($header1), '');
+        
+        $mergedRow = [
+            $row2[array_search('name', $header2)],
+            $row2[array_search('sku', $header2)],
+            $supplierReference,
+            $row1[1],
+        ];
+         
+        $mergedData[] = $mergedRow;
     }
 
     writeCSV($outputFile, $mergedData);
 }
 
 
-mergeCSVData('files//WAS.csv', 'files//was-pack.csv', 'files//was-packOf.csv');
+mergeCSVData('files//was-pack.csv', 'files//WAS.csv', 'files//was-packOf.csv');
 
 echo "Le nouveau fichier a été créé avec succès.\n";
